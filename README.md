@@ -28,3 +28,45 @@ The Week 1 preparation scripts generate:
 
 * `listed_combined_residential.csv`
 * `sold_combined_residential.csv`
+
+---
+
+## Week 2 Tasks
+
+* Performed **dataset structuring and validation** on the combined Residential listing and sold datasets
+* Reviewed dataset **shape, column names, and data types**
+* Confirmed **Residential-only PropertyType values**
+* Generated **missing value summary reports** for all columns
+* Flagged columns with **more than 90% missing values**
+* Created **numeric distribution summaries** for key market fields:
+  * `ClosePrice`
+  * `ListPrice`
+  * `OriginalListPrice`
+  * `LivingArea`
+  * `LotSizeAcres`
+  * `BedroomsTotal`
+  * `BathroomsTotalInteger`
+  * `DaysOnMarket`
+  * `YearBuilt`
+* Built **separate validation pipelines**:
+  * `week2_listed_validation.py`
+  * `week2_sold_validation.py`
+* Built a **numeric distribution EDA workflow**:
+  * `week2_numeric_distribution_graphs.py`
+* Used **histograms, boxplots, and percentile summaries** to identify extreme outliers for later Week 7 filtering
+
+---
+
+## Output Files
+
+The Week 2 validation and EDA scripts generate:
+
+* `listed_missing_value_report.csv`
+* `listed_high_missing_columns.csv`
+* `listed_numeric_distribution_summary.csv`
+* `sold_missing_value_report.csv`
+* `sold_high_missing_columns.csv`
+* `sold_numeric_distribution_summary.csv`
+
+---
+
