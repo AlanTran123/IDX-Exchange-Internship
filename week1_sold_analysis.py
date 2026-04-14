@@ -49,4 +49,10 @@ sold_residential.to_csv(
     index=False
 )
 
-print("\nFinal sold rows saved:", len(sold_residential))
+print("Rows:", len(sold_residential))
+print("Duplicate rows:", sold_residential.duplicated().sum())
+print("Completely empty rows:",
+      sold_residential.isna().all(axis=1).sum())
+
+print("\nPropertyType check:")
+print(sold_residential["PropertyType"].value_counts(dropna=False))
