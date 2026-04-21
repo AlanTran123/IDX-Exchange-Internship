@@ -41,6 +41,14 @@ print(missing_report)
 print("\n=== COLUMNS WITH > 90% NULL ===")
 high_missing = missing_report[missing_report["null_percentage"] > 90]
 
+total_columns = len(missing_report)
+flagged_columns = len(high_missing)
+remaining_columns = total_columns - flagged_columns
+
+print(f"Total columns: {total_columns}")
+print(f"Columns flagged (>90% null): {flagged_columns}")
+print(f"Remaining columns after flagging: {remaining_columns}")
+
 if high_missing.empty:
     print("No columns above 90% null.")
 else:
