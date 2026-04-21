@@ -70,3 +70,26 @@ The Week 2 validation and EDA scripts generate:
 
 ---
 
+## Week 3 Tasks
+
+* Integrated external economic data by fetching the **30-year fixed mortgage rate (MORTGAGE30US)** from FRED
+* Converted weekly mortgage rate data into **monthly averages** for time-based analysis
+* Created a **year_month key** to align mortgage data with MLS datasets
+* Merged mortgage rate data onto:
+  * Sold dataset using `CloseDate`
+  * Listed dataset using `ListingContractDate`
+* Validated the merge by confirming **no missing mortgage rate values**
+* Previewed merged data to ensure correct alignment of dates and rates
+* Saved enriched datasets for downstream analysis and Tableau integration
+
+---
+
+## Output Files
+
+The Week 3 enrichment pipeline generates:
+
+* `sold_combined_residential_with_mortgage.csv`
+* `listed_combined_residential_with_mortgage.csv`
+
+---
+
