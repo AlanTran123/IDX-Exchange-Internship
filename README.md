@@ -93,3 +93,44 @@ The Week 3 enrichment pipeline generates:
 
 ---
 
+## Week 4–5 Tasks
+
+* Built a **continuous, cumulative data pipeline** by consolidating all weekly scripts into:
+  * `sold.py`
+  * `listings.py`
+* Converted key date fields into proper datetime format for time-based analysis:
+  * `CloseDate`
+  * `PurchaseContractDate`
+  * `ListingContractDate`
+  * `ContractStatusChangeDate`
+* Removed redundant and duplicate columns (e.g., `.1` columns created during data joins)
+* Converted key numeric fields to appropriate data types to ensure analytical consistency:
+  * Pricing, property attributes, and mortgage rate fields
+* Identified and **flagged invalid numeric values** instead of removing them:
+  * Negative or zero values in price, living area, days on market, bedrooms, and bathrooms
+* Created **data quality flag columns** to preserve transparency and support downstream filtering
+* Implemented **date consistency checks**:
+  * Listings occurring after close dates
+  * Purchase contract dates occurring after close dates
+  * Negative timeline inconsistencies between listing and purchase events
+* Built **geographic data quality checks**:
+  * Missing coordinates
+  * Zero-value coordinates
+  * Positive longitude values (invalid for U.S. data)
+  * Out-of-bounds latitude/longitude values outside expected California ranges
+* Retained high-missing columns to preserve flexibility for stakeholder analysis rather than prematurely dropping data
+* Generated **summary outputs** including:
+  * Before vs after row and column counts
+  * Invalid numeric value counts
+  * Date consistency flag counts
+  * Geographic data quality summaries
+* Produced **final cleaned, analysis-ready datasets** for Tableau dashboard ingestion
+
+---
+
+## Output Files
+
+The Week 4–5 data cleaning pipeline generates:
+
+* `sold_cleaned_residential.csv`
+* `listed_cleaned_residential.csv`
