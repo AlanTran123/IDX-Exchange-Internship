@@ -134,3 +134,43 @@ The Week 4–5 data cleaning pipeline generates:
 
 * `sold_cleaned_residential.csv`
 * `listed_cleaned_residential.csv`
+
+---
+
+## Week 6 Tasks
+
+* Implemented **feature engineering to create key market indicators** for analysis and Tableau dashboards
+* Created pricing metrics:
+  * `price_ratio` = ClosePrice / OriginalListPrice (measures negotiation strength)
+  * `close_to_original_list_ratio` (captures full price reduction behavior)
+  * `price_per_sqft` = ClosePrice / LivingArea (normalizes price across property sizes)
+* Retained `DaysOnMarket` as the core time-to-sell indicator
+* Generated time-series variables from `CloseDate`:
+  * `year`
+  * `month`
+  * `yrmo`
+* Created transaction timeline metrics:
+  * `listing_to_contract_days` = PurchaseContractDate − ListingContractDate
+  * `contract_to_close_days` = CloseDate − PurchaseContractDate
+* Validated feature engineering by:
+  * printing sample outputs with new columns populated
+  * confirming all required Week 6 columns were successfully added
+* Built **segmented summary tables** grouped by `CountyOrParish` to analyze:
+  * median pricing trends
+  * average price per square foot
+  * average days on market
+* Maintained a cumulative pipeline structure by integrating feature engineering directly into:
+  * `sold.py`
+  * `listed.py`
+* Produced **final feature-engineered datasets** ready for advanced analysis and Tableau dashboard development
+
+---
+
+## Output Files
+
+The Week 6 feature engineering pipeline generates:
+
+* `sold_feature_engineered_residential.csv`
+* `listed_feature_engineered_residential.csv`
+* `sold_county_segment_summary.csv`
+* `listed_county_segment_summary.csv`

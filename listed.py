@@ -339,8 +339,109 @@ print(f"Columns: {after_cols}")
 print(f"Rows removed: {before_rows - after_rows}")
 print(f"Columns removed: {before_cols - after_cols}")
 
-# Save cleaned dataset
-listed.to_csv("listed_cleaned_residential.csv", index=False)
 
-print("\nListed Week 4 cleaning complete.")
-print("Saved: listed_cleaned_residential.csv")
+# =========================
+# Week 6: Feature Engineering and Market Metrics
+# =========================
+
+
+print("\n=== WEEK 6: FEATURE ENGINEERING ===")
+
+# Price Ratio: ClosePrice / OriginalListPrice
+if "ClosePrice" in listed.columns and "OriginalListPrice" in listed.columns:
+    listed["price_ratio"] = listed["ClosePrice"] / listed["OriginalListPrice"]
+    listed["close_to_original_list_ratio"] = listed["price_ratio"]
+
+# Price Per Sq Ft
+if "ClosePrice" in listed.columns and "LivingArea" in listed.columns:
+    listed["price_per_sqft"] = listed["ClosePrice"] / listed["LivingArea"]
+
+# Time variables (use CloseDate if available, otherwise fallback)
+if "CloseDate" in listed.columns:
+    listed["year"] = listed["CloseDate"].dt.year
+    listed["month"] = listed["CloseDate"].dt.month
+    listed["yrmo"] = listed["CloseDate"].dt.to_period("M").astype(str)
+
+# Listing to Contract Days
+if "PurchaseContractDate" in listed.columns and "ListingContractDate" in listed.columns:
+    listed["listing_to_contract_days"] = (
+        listed["PurchaseContractDate"] - listed["ListingContractDate"]
+    ).dt.days
+
+# Contract to Close Days
+if "CloseDate" in listed.columns and "PurchaseContractDate" in listed.columns:
+    listed["contract_to_close_days"] = (
+        listed["CloseDate"] - listed["PurchaseContractDate"]
+    ).dt.days
+
+# Confirm required Week 6 feature columns
+week6_features = [
+    "price_ratio",
+    "price_per_sqft",
+    "DaysOnMarket",
+    "year",
+    "month",
+    "yrmo",
+    "close_to_original_list_ratio",
+    "listing_to_contract_days",
+    "contract_to_close_days"
+]
+
+existing_week6_features = [col for col in week6_features if col in listed.columns]
+
+print("\nWeek 6 feature columns created / retained:")
+print(existing_week6_features)
+
+# Sample output
+print("\nSample engineered metric output:")
+sample_cols = [
+    "ClosePrice",
+    "OriginalListPrice",
+    "LivingArea",
+    "price_ratio",
+    "close_to_original_list_ratio",
+    "price_per_sqft",
+    "DaysOnMarket",
+    "year",
+    "month",
+    "yrmo",
+    "listing_to_contract_days",
+    "contract_to_close_days"
+]
+
+existing_sample_cols = [col for col in sample_cols if col in listed.columns]
+print(listed[existing_sample_cols].head())
+
+# Segmented summary
+print("\nSegmented summary by CountyOrParish:")
+if "CountyOrParish" in listed.columns:
+    county_summary = listed.groupby("CountyOrParish").agg(
+        median_list_price=("ListPrice", "median"),
+        avg_price_per_sqft=("price_per_sqft", "mean"),
+        avg_days_on_market=("DaysOnMarket", "mean"),
+        listings_count=("ListingKey", "count")
+    ).reset_index()
+
+    print(county_summary.head())
+    county_summary.to_csv("listed_county_segment_summary.csv", index=False)
+
+# Print confirmation
+print("\nWeek 6 columns present:",
+      [col for col in [
+          "price_ratio",
+          "close_to_original_list_ratio",
+          "price_per_sqft",
+          "year",
+          "month",
+          "yrmo",
+          "listing_to_contract_days",
+          "contract_to_close_days",
+          "DaysOnMarket"
+      ] if col in listed.columns]
+)
+
+# Save dataset
+listed.to_csv("listed_feature_engineered_residential.csv", index=False)
+
+print("\nListed Week 6 feature engineering complete.")
+print("Saved: listed_feature_engineered_residential.csv")

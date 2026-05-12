@@ -339,8 +339,116 @@ print(f"Rows removed: {before_rows - after_rows}")
 print(f"Columns removed: {before_cols - after_cols}")
 
 
-# Save cleaned dataset
-sold.to_csv("sold_cleaned_residential.csv", index=False)
+# =========================
+# Week 6: Feature Engineering and Market Metrics
+# =========================
 
-print("\nSold Week 4 cleaning complete.")
-print("Saved: sold_cleaned_residential.csv")
+
+print("\n=== WEEK 6: FEATURE ENGINEERING ===")
+
+# Price Ratio: ClosePrice / OriginalListPrice
+if "ClosePrice" in sold.columns and "OriginalListPrice" in sold.columns:
+    sold["price_ratio"] = sold["ClosePrice"] / sold["OriginalListPrice"]
+
+# Price Per Sq Ft: ClosePrice / LivingArea
+if "ClosePrice" in sold.columns and "LivingArea" in sold.columns:
+    sold["price_per_sqft"] = sold["ClosePrice"] / sold["LivingArea"]
+
+# Year / Month / YrMo: derived from CloseDate
+if "CloseDate" in sold.columns:
+    sold["year"] = sold["CloseDate"].dt.year
+    sold["month"] = sold["CloseDate"].dt.month
+    sold["yrmo"] = sold["CloseDate"].dt.to_period("M").astype(str)
+
+# Close to Original List Ratio: ClosePrice / OriginalListPrice
+if "ClosePrice" in sold.columns and "OriginalListPrice" in sold.columns:
+    sold["close_to_original_list_ratio"] = sold["ClosePrice"] / sold["OriginalListPrice"]
+
+# Listing to Contract Days: PurchaseContractDate - ListingContractDate
+if "PurchaseContractDate" in sold.columns and "ListingContractDate" in sold.columns:
+    sold["listing_to_contract_days"] = (
+        sold["PurchaseContractDate"] - sold["ListingContractDate"]
+    ).dt.days
+
+# Contract to Close Days: CloseDate - PurchaseContractDate
+if "CloseDate" in sold.columns and "PurchaseContractDate" in sold.columns:
+    sold["contract_to_close_days"] = (
+        sold["CloseDate"] - sold["PurchaseContractDate"]
+    ).dt.days
+
+# Confirm required Week 6 feature columns
+week6_features = [
+    "price_ratio",
+    "price_per_sqft",
+    "DaysOnMarket",
+    "year",
+    "month",
+    "yrmo",
+    "close_to_original_list_ratio",
+    "listing_to_contract_days",
+    "contract_to_close_days"
+]
+
+existing_week6_features = [col for col in week6_features if col in sold.columns]
+
+print("\nWeek 6 feature columns created / retained:")
+print(existing_week6_features)
+
+# Sample output table showing new columns populated
+print("\nSample engineered metric output:")
+sample_cols = [
+    "ClosePrice",
+    "OriginalListPrice",
+    "LivingArea",
+    "price_ratio",
+    "close_to_original_list_ratio",
+    "price_per_sqft",
+    "DaysOnMarket",
+    "CloseDate",
+    "year",
+    "month",
+    "yrmo",
+    "ListingContractDate",
+    "PurchaseContractDate",
+    "listing_to_contract_days",
+    "contract_to_close_days"
+]
+
+existing_sample_cols = [col for col in sample_cols if col in sold.columns]
+print(sold[existing_sample_cols].head())
+
+# Segmented summary table by CountyOrParish
+print("\nSegmented summary by CountyOrParish:")
+if "CountyOrParish" in sold.columns:
+    county_summary = sold.groupby("CountyOrParish").agg(
+        median_close_price=("ClosePrice", "median"),
+        avg_close_price=("ClosePrice", "mean"),
+        avg_price_per_sqft=("price_per_sqft", "mean"),
+        avg_days_on_market=("DaysOnMarket", "mean"),
+        avg_close_to_original_list_ratio=("close_to_original_list_ratio", "mean"),
+        closed_sales=("ListingKey", "count")
+    ).reset_index()
+
+    print(county_summary.head())
+    county_summary.to_csv("sold_county_segment_summary.csv", index=False)
+
+# Print all columns
+print("\nWeek 6 columns present:",
+      [col for col in [
+          "price_ratio",
+          "close_to_original_list_ratio",
+          "price_per_sqft",
+          "year",
+          "month",
+          "yrmo",
+          "listing_to_contract_days",
+          "contract_to_close_days",
+          "DaysOnMarket"
+      ] if col in sold.columns]
+)
+
+# Save feature-engineered dataset
+sold.to_csv("sold_feature_engineered_residential.csv", index=False)
+
+print("\nSold Week 6 feature engineering complete.")
+print("Saved: sold_feature_engineered_residential.csv")
